@@ -17,8 +17,11 @@ public class EnemyMovement : MonoBehaviour
         if (targetIndex >= waypoints.Length)
             return;
 
-        if((Vector2)transform.position == (Vector2) waypoints[targetIndex].position)
-                targetIndex++;
+        if ((Vector2)transform.position == (Vector2)waypoints[targetIndex].position)
+        {
+            Debug.Log($"Waypoint {targetIndex} reached. Distance to next point: {Vector2.Distance(transform.position, waypoints[targetIndex + 1].position)}. Time: {Time.time}");
+            targetIndex++;
+        }
 
         transform.position = Vector2.MoveTowards(transform.position, waypoints[targetIndex].position, Time.deltaTime * moveSpeed);
     }
