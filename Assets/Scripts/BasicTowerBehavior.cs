@@ -13,13 +13,8 @@ public class BasicTowerBehavior : MonoBehaviour
     {
         if(lastFireTime + fireRateInSeconds <= Time.time)
         {
-            var lookDir = enemy.position - transform.position;
-            float angle = Mathf.Atan2(lookDir.y, lookDir.x);
-            var direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-
-            var bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-            var data = bullet.GetComponent<BasicBulletBehavior>();
-            data.direction = direction;
+            var projectile = Instantiate(bulletPrefab, transform.position, Quaternion.identity).GetComponent<BasicBulletBehavior>();
+            projectile.targetTransform = enemy;
 
             lastFireTime = Time.time;
         }

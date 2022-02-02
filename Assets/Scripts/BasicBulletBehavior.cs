@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BasicBulletBehavior : MonoBehaviour
 {
-    public Vector2 direction;
+    public Transform targetTransform;
     public float velocity;
 
     private void Start()
@@ -12,7 +12,7 @@ public class BasicBulletBehavior : MonoBehaviour
 
     void FixedUpdate()
     {
-        transform.position += (Vector3)direction.normalized * velocity;
+        transform.position = Vector2.MoveTowards(transform.position, targetTransform.position, velocity);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
