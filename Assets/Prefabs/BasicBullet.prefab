@@ -99,6 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTransform: {fileID: 0}
   velocity: 0.5
+  power: 10
 --- !u!61 &1821228888369044654
 BoxCollider2D:
   m_ObjectHideFlags: 0
