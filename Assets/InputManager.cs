@@ -5,13 +5,14 @@ public class InputManager : MonoBehaviour
     public Camera mainCamera;
     public GameObject indicatorSquare;
     public GameObject towerPrefab;
-    public int width;
-    public int height;
 
     private int[,] gameGrid;
 
     private void Start()
     {
+        var width = GameState.width;
+        var height = GameState.height;
+
         gameGrid = new int[width,height];
 
         for(var i = 0; i < height; i++)
@@ -33,6 +34,17 @@ public class InputManager : MonoBehaviour
         if (!Input.GetButtonDown("Fire1"))
             return;
 
-        Instantiate(towerPrefab, new Vector3(Mathf.FloorToInt(point.x) + 0.5f, Mathf.FloorToInt(point.y) + 0.5f, 0), Quaternion.identity);
+        var placementX = Mathf.FloorToInt(point.x);
+        var placementY = Mathf.FloorToInt(point.y);
+
+        var gridX = GameState.GetGridX(placementX);
+        var gridY = GameState.GetGridY(placementY);
+
+        if (gameGrid[gridX, gridY] == 1)
+            return;
+
+        gameGrid[gridX, gridY] = 1;
+
+        Instantiate(towerPrefab, new Vector3(placementX + 0.5f, placementY + 0.5f, 0), Quaternion.identity);
     }
 }

@@ -6,7 +6,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject enemyPrefab;
-    public Transform spawnPoint;
+    public GameObject waypointPrefab;
+
+    private (int x, int y)[] wayPoints;
     public Transform[] enemyPathWaypoints;
 
     public int enemiesPerWave = 10;
@@ -20,7 +22,27 @@ public class GameManager : MonoBehaviour
 
     private List<GameObject> enemies = new List<GameObject>();
 
-    private void Start() {
+    private void Start()
+    {
+        wayPoints = new[]
+        {
+            (-1, 2),
+            (1, 2),
+            (1, 27),
+            (25, 27),
+            (25, 2),
+            (50, 2),
+            (50, 27),
+            (52, 27)
+        };
+
+        enemyPathWaypoints = new Transform[wayPoints.Length];
+        for(var k = 0; k < wayPoints.Length; k++)
+        {
+            var obj = Instantiate(waypointPrefab, GameState.GridToWorldPoint(new Vector2(wayPoints[k].x, wayPoints[k].y)), Quaternion.identity);
+            enemyPathWaypoints[k] = obj.transform;
+        }
+
         gameState = GameState.Instance;
         gameState.SetLevelWaypoints(enemyPathWaypoints.ToList());
     }
@@ -35,7 +57,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator SpawnWave()
     {
         for (var i = 0; i < enemiesPerWave; i++) {
-            var enemy = Instantiate(enemyPrefab, spawnPoint.position, Quaternion.identity).GetComponent<EnemyBehavior>();
+            var enemy = Instantiate(enemyPrefab, enemyPathWaypoints[0].position, Quaternion.identity).GetComponent<EnemyBehavior>();
             enemy.waypoints = enemyPathWaypoints;
             enemy.OnDeath += OnEnemyKilled;
 
