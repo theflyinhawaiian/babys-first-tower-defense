@@ -176,7 +176,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 15
+  orthographic size: 14.33
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -252,15 +252,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 3828307178538355428, guid: 62e094f505b2f3b4ab16de1e457ec20d, type: 3}
   waypointPrefab: {fileID: 8049278525937308401, guid: 45733bcbbc3e2034ba0888a2de8dfed8, type: 3}
-  enemyPathWaypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   enemiesPerWave: 10
   secondsBetweenWaves: 30
   secondsBetweenSpawns: 1

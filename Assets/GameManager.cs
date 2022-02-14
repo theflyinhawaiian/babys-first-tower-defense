@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public GameObject waypointPrefab;
 
     private (int x, int y)[] wayPoints;
-    public Transform[] enemyPathWaypoints;
+    private Transform[] enemyPathWaypoints;
 
     public int enemiesPerWave = 10;
     public int secondsBetweenWaves = 30;
@@ -24,26 +24,17 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        wayPoints = new[]
-        {
-            (-1, 2),
-            (1, 2),
-            (1, 27),
-            (25, 27),
-            (25, 2),
-            (50, 2),
-            (50, 27),
-            (52, 27)
-        };
+        gameState = GameState.Instance;
 
-        enemyPathWaypoints = new Transform[wayPoints.Length];
-        for(var k = 0; k < wayPoints.Length; k++)
+        var waypoints = gameState.waypoints;
+
+        enemyPathWaypoints = new Transform[waypoints.Length];
+        for(var k = 0; k < waypoints.Length; k++)
         {
-            var obj = Instantiate(waypointPrefab, GameState.GridToWorldPoint(new Vector2(wayPoints[k].x, wayPoints[k].y)), Quaternion.identity);
+            var obj = Instantiate(waypointPrefab, GameState.GridToWorldPoint(new Vector2(waypoints[k].x, waypoints[k].y)), Quaternion.identity);
             enemyPathWaypoints[k] = obj.transform;
         }
 
-        gameState = GameState.Instance;
         gameState.SetLevelWaypoints(enemyPathWaypoints.ToList());
     }
 
