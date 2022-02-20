@@ -17,7 +17,6 @@ public class MoneyTrackingBehavior : MonoBehaviour, IPlayerMoneyChangedListener
 
     public void OnPlayerMoneyChanged(int newAmount)
     {
-        Debug.Log("Hey, it's happening");
         label.text = $"${newAmount}";
     }
 }
