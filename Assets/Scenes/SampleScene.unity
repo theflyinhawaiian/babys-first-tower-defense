@@ -588,7 +588,7 @@ MonoBehaviour:
   mainCamera: {fileID: 519420031}
   indicatorSquare: {fileID: 1805558845}
   towerPrefab: {fileID: 1681932394198152067, guid: 7440fc150344ded45b119afba85cc74e, type: 3}
-  gameManager: {fileID: 0}
+  gameManager: {fileID: 744093149}
 --- !u!1 &869489993
 GameObject:
   m_ObjectHideFlags: 0
@@ -765,7 +765,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 695e551bd59f5624eb64be567c9335a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 0}
+  manager: {fileID: 744093149}
 --- !u!114 &1486924137
 MonoBehaviour:
   m_ObjectHideFlags: 0
