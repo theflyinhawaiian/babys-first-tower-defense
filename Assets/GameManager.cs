@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
 
     private void OnEnemyKilled(GameObject enemy)
     {
+        playerMoney += 10;
         enemies.Remove(enemy);
     }
 
