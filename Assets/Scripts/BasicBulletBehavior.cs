@@ -6,14 +6,19 @@ public class BasicBulletBehavior : MonoBehaviour
     public float velocity;
     public int power;
 
-    private void Start()
-    {
-        Destroy(gameObject, 15);
-    }
+    private Vector3 lastKnownTargetPosition;
 
     void FixedUpdate()
     {
-        transform.position = Vector2.MoveTowards(transform.position, targetTransform.position, velocity);
+        var target = targetTransform != null ? targetTransform.position : lastKnownTargetPosition;
+
+        var move = Vector2.MoveTowards(transform.position, target, velocity);
+
+        if (move == Vector2.zero)
+            Destroy(gameObject);
+
+        transform.position = move;
+        lastKnownTargetPosition = target;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -24,5 +29,11 @@ public class BasicBulletBehavior : MonoBehaviour
             entity.ApplyDamage(power);
             Destroy(gameObject);
         }
+    }
+
+    public void SetTarget(Transform target)
+    {
+        targetTransform = target;
+        lastKnownTargetPosition = target.position;
     }
 }

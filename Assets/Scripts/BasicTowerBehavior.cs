@@ -21,7 +21,7 @@ public class BasicTowerBehavior : MonoBehaviour
         if(lastFireTime + fireRateInSeconds <= Time.time)
         {
             var projectile = Instantiate(bulletPrefab, transform.position, Quaternion.identity).GetComponent<BasicBulletBehavior>();
-            projectile.targetTransform = closestEnemy.transform;
+            projectile.SetTarget(closestEnemy.transform);
 
             lastFireTime = Time.time;
         }
