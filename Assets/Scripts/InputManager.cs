@@ -5,8 +5,14 @@ public class InputManager : MonoBehaviour
     public Camera mainCamera;
     public GameObject indicatorSquare;
     public GameObject towerPrefab;
+    public GameManager gameManager;
 
     int lastX, lastY;
+
+    private void Start()
+    {
+        gameManager = GetComponent<GameManager>();
+    }
 
     private void Update()
     {
@@ -22,13 +28,13 @@ public class InputManager : MonoBehaviour
             indicatorSquare.transform.position = new Vector3(Mathf.FloorToInt(point.x) + 0.5f, Mathf.FloorToInt(point.y) + 0.5f, -1);
 
             var indicatorRenderer = indicatorSquare.GetComponent<SpriteRenderer>();
-            indicatorRenderer.color = GameState.Instance.isOccupied(placementX, placementY) ? Color.red : Color.green;
+            indicatorRenderer.color = gameManager.CanPlaceTowerAt(placementX, placementY) ? Color.green : Color.red;
         }
 
         if (!Input.GetButtonDown("Fire1"))
             return;
 
-        if (!GameState.Instance.TryPlace(placementX, placementY))
+        if (!gameManager.TryPlaceTowerAt(placementX, placementY))
             return;
 
         Instantiate(towerPrefab, new Vector3(placementX + 0.5f, placementY + 0.5f, 0), Quaternion.identity);

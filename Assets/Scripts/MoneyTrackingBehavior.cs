@@ -11,11 +11,13 @@ public class MoneyTrackingBehavior : MonoBehaviour, IPlayerMoneyChangedListener
     private void Start()
     {
         label = GetComponent<Text>();
-        manager.AddPlayerMoneyChangedListener(this);
+        var moneyManager = manager.MoneyManager;
+        moneyManager.AddPlayerMoneyChangedListener(this);
     }
 
     public void OnPlayerMoneyChanged(int newAmount)
     {
+        Debug.Log("Hey, it's happening");
         label.text = $"${newAmount}";
     }
 }

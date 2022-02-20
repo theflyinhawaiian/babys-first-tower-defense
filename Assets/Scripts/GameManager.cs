@@ -2,24 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Interfaces;
+using Assets.Scripts;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    private const int TOWER_COST = 100;
+
     public GameObject enemyPrefab;
     public GameObject waypointPrefab;
 
     private (int x, int y)[] wayPoints;
     private Transform[] enemyPathWaypoints;
-
-    private int _playerMoney;
-    public int playerMoney { get => _playerMoney;
-        set
-        {
-            _playerMoney = value;
-            NotifyPlayerMoneyChangedListeners(_playerMoney);
-        }
-    }
 
     public int enemiesPerWave = 10;
     public int secondsBetweenWaves = 30;
@@ -29,6 +23,8 @@ public class GameManager : MonoBehaviour
     bool currentlySpawning = false;
 
     private static GameState gameState;
+
+    public MoneyManager MoneyManager { get; private set; }
 
     private List<GameObject> enemies = new List<GameObject>();
 
@@ -40,7 +36,7 @@ public class GameManager : MonoBehaviour
 
         var waypoints = gameState.waypoints;
 
-        playerMoney = 500;
+        MoneyManager = new MoneyManager(500);
 
         enemyPathWaypoints = new Transform[waypoints.Length];
         for(var k = 0; k < waypoints.Length; k++)
@@ -77,22 +73,26 @@ public class GameManager : MonoBehaviour
 
     private void OnEnemyKilled(GameObject enemy)
     {
-        playerMoney += 10;
+        MoneyManager.AddBalance(10);
         enemies.Remove(enemy);
     }
 
-    public void AddPlayerMoneyChangedListener(IPlayerMoneyChangedListener listener) => moneyChangedListeners.Add(listener);
-
-    public void RemovePlayerMoneyChangedListener(IPlayerMoneyChangedListener listener) => moneyChangedListeners.Remove(listener);
-
-    public void ClearPlayerMoneyChangedListeners() => moneyChangedListeners.Clear();
-
-    private void NotifyPlayerMoneyChangedListeners(int newAmount)
+    public bool CanPlaceTowerAt(int x, int y)
     {
-        foreach(var listener in moneyChangedListeners)
-        {
-            listener.OnPlayerMoneyChanged(newAmount);
-        }
+        if (!MoneyManager.CanAfford(TOWER_COST))
+            return false;
+
+        return !gameState.IsOccupied(x, y);
+    }
+
+    public bool TryPlaceTowerAt(int x, int y)
+    {
+        if (!CanPlaceTowerAt(x, y))
+            return false;
+
+        MoneyManager.TrySubtractBalance(TOWER_COST);
+        gameState.TryPlaceTower(x, y);
+        return true;
     }
 
     public static float GetDistanceFromBase(EnemyBehavior enemy) => 

@@ -115,23 +115,28 @@ public class GameState
         }
     }
 
-    public bool TryPlace(int placementX, int placementY)
+    public bool TryPlaceTower(int placementX, int placementY)
     {
         var gridX = GetGridX(placementX);
         var gridY = GetGridY(placementY);
 
-        if (gameGrid[gridX, gridY] != 0)
+        if (IsOccupiedInternal(gridX, gridY))
             return false;
 
         gameGrid[gridX, gridY] = 1;
         return true;
     }
 
-    public bool isOccupied(int queryX, int queryY)
+    public bool IsOccupied(int queryX, int queryY)
     {
         var gridX = GetGridX(queryX);
         var gridY = GetGridY(queryY);
 
+        return IsOccupiedInternal(gridX, gridY);
+    }
+
+    private bool IsOccupiedInternal(int gridX, int gridY)
+    {
         if (gridX < 0 || gridX >= width || gridY < 0 || gridY >= height)
             return true;
 
@@ -140,7 +145,7 @@ public class GameState
 
     public static Vector3 GridToWorldPoint(Vector2 gridPoint) => new Vector3(gridPoint.x - 1 - (width / 2) + 0.5f, gridPoint.y - 1 - (height / 2) + 0.5f, 0);
 
-    public static int GetGridX(int xPos) => xPos + (width / 2) + 1;
+    private static int GetGridX(int xPos) => xPos + (width / 2) + 1;
 
-    public static int GetGridY(int yPos) => yPos + (height / 2) + 1;
+    private static int GetGridY(int yPos) => yPos + (height / 2) + 1;
 }
