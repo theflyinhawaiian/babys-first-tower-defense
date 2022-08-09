@@ -98,10 +98,12 @@ public class GameState
                 if (xValue < 0 || xValue >= gameGrid.GetLength(0) || yValue < 0 || yValue >= gameGrid.GetLength(0))
                     continue;
 
-                gameGrid[xValue, yValue] = 2;
+                gameGrid[xValue, yValue] = 1;
             }
         }
     }
+
+    public int[,] GetGameGrid() => gameGrid;
 
     public void SetLevelWaypoints(List<Transform> levelWaypoints)
     {
@@ -123,7 +125,7 @@ public class GameState
         if (IsOccupiedInternal(gridX, gridY))
             return false;
 
-        gameGrid[gridX, gridY] = 1;
+        gameGrid[gridX, gridY] = 2;
         return true;
     }
 

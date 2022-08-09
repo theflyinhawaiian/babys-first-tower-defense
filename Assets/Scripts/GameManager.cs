@@ -4,6 +4,7 @@ using System.Linq;
 using Assets.Scripts.Interfaces;
 using Assets.Scripts;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject enemyPrefab;
     public GameObject waypointPrefab;
+    public Tilemap tilemap;
 
     private (int x, int y)[] wayPoints;
     private Transform[] enemyPathWaypoints;
@@ -46,6 +48,9 @@ public class GameManager : MonoBehaviour
         }
 
         gameState.SetLevelWaypoints(enemyPathWaypoints.ToList());
+
+        var mapRenderer = new MapRenderer();
+        mapRenderer.RenderMap(tilemap, gameState.GetGameGrid());
     }
 
     private void Update() {
