@@ -1,8 +1,8 @@
+using Assets.Scripts;
+using Assets.Scripts.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts.Interfaces;
-using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -12,9 +12,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject enemyPrefab;
     public GameObject waypointPrefab;
-    public Tilemap tilemap;
+    public Tilemap tileMap;
 
-    private (int x, int y)[] wayPoints;
     private Transform[] enemyPathWaypoints;
 
     public int enemiesPerWave = 10;
@@ -43,7 +42,7 @@ public class GameManager : MonoBehaviour
         enemyPathWaypoints = new Transform[waypoints.Length];
         for(var k = 0; k < waypoints.Length; k++)
         {
-            var obj = Instantiate(waypointPrefab, GameState.GridToWorldPoint(new Vector2(waypoints[k].x, waypoints[k].y)), Quaternion.identity);
+            var obj = Instantiate(waypointPrefab, GameState.GridToWorldPoint(new Vector2(waypoints[k].X, waypoints[k].Y)), Quaternion.identity);
             enemyPathWaypoints[k] = obj.transform;
         }
 
@@ -100,7 +99,7 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    public static float GetDistanceFromBase(EnemyBehavior enemy) => 
-        Vector2.Distance(enemy.transform.position, gameState.LevelWaypoints[enemy.NextWaypoint].position) 
+    public static float GetDistanceFromBase(EnemyBehavior enemy) =>
+        Vector2.Distance(enemy.transform.position, gameState.LevelWaypoints[enemy.NextWaypoint].position)
             + gameState.distances[enemy.NextWaypoint];
 }
