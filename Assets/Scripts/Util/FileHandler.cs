@@ -10,14 +10,13 @@ namespace Assets.Scripts.Util
     {
         public static void SaveToJSON<T>(List<T> toSave, string filename)
         {
-            Debug.Log(GetPath(filename));
             var content = JsonHelper.ToJson(toSave.ToArray());
             WriteFile(GetPath(filename), content);
         }
 
         public static void SaveToJSON<T>(T toSave, string filename)
         {
-            var content = JsonUtility.ToJson(toSave);
+            var content = JsonUtility.ToJson(toSave, true);
             Debug.Log(content);
             WriteFile(GetPath(filename), content);
         }

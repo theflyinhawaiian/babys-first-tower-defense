@@ -24,17 +24,10 @@ namespace Assets.Scripts
             if (x >= width || y >= height || gameGrid[x,y] == 0)
                 return TileResourceLoader.GetBlankSpace();
 
-            var left = x == 0 ? 0 : gameGrid[x - 1, y];
-            var up = y == 0 ? 0 : gameGrid[x, y - 1];
-            var right = x == width - 1 ? 0 : gameGrid[x + 1, y];
-            var down = y == height - 1 ? 0 : gameGrid[x, y + 1];
-
             var config = y == 0 ? "0" : gameGrid[x, y+1].ToString();
             config += x == 0 ? "0" : gameGrid[x-1, y].ToString();
             config += x == width - 1 ? "0" : gameGrid[x+1, y].ToString();
             config += y == height - 1 ? "0" : gameGrid[x, y - 1].ToString();
-
-            Debug.Log($"Grid[{x},{y}]: {down}{left}{right}{up}, tile config: {config} ");
 
             Tile res;
 

@@ -32,11 +32,20 @@ public class GameState
 
     public GameState()
     {
-        var map = new MapInfo
-        {
-            Waypoints = new Point[]
+        var map = FileHandler.ReadFromJSON<GameMap>("foomap");
+        InitializeState(map);
+    }
+
+    public GameState(GameMap map)
+    {
+        InitializeState(map);
+    }
+
+    private void InitializeState(GameMap map)
+    {
+        waypoints = new Point[]
             {
-                new Point(-1, 3),
+                new Point(0, 3),
                 new Point(2, 3),
                 new Point(2, 28),
                 new Point(20, 28),
@@ -44,73 +53,9 @@ public class GameState
                 new Point(40, 3),
                 new Point(40, 28),
                 new Point(43, 28)
-            },
-            Height = 31,
-            Width = 53
-        };
-        InitializeState(map);
-        Debug.Log(Application.persistentDataPath);
-        FileHandler.SaveToJSON(map, "foomap");
-    }
+            };
 
-    public GameState(MapInfo map)
-    {
-        InitializeState(map);
-    }
-
-    private void InitializeState(MapInfo map)
-    {
-        waypoints = map.Waypoints;
-        gameGrid = new int[map.Width, map.Height];
-
-        for (var i = 0; i < height; i++) {
-            for (var j = 0; j < width; j++) {
-                gameGrid[j, i] = 0;
-            }
-        }
-
-        for (var i = 0; i < waypoints.Length - 1; i++) {
-            var currPoint = waypoints[i];
-            var nextPoint = waypoints[i + 1];
-
-            var dx = nextPoint.X - currPoint.X;
-            var dy = nextPoint.Y - currPoint.Y;
-
-            if (dx != 0 && dy != 0) {
-                Debug.Log("INVALID STATE: We don't support diagonal paths");
-                return;
-            } else if (dx == 0 && dy == 0) {
-                Debug.Log("INVALID STATE: We don't support identical points");
-                return;
-            }
-
-            int current, target, diff, fix;
-            bool horizontal;
-
-            if (dx != 0) {
-                current = currPoint.X;
-                target = nextPoint.X;
-                fix = currPoint.Y;
-                diff = dx > 0 ? 1 : -1;
-                horizontal = true;
-            } else {
-                current = currPoint.Y;
-                target = nextPoint.Y;
-                diff = dy > 0 ? 1 : -1;
-                fix = currPoint.X;
-                horizontal = false;
-            }
-
-            for (var j = current; j != target; j += diff) {
-                var xValue = horizontal ? j : fix;
-                var yValue = horizontal ? fix : j;
-
-                if (xValue < 0 || xValue >= gameGrid.GetLength(0) || yValue < 0 || yValue >= gameGrid.GetLength(0))
-                    continue;
-
-                gameGrid[xValue, yValue] = 1;
-            }
-        }
+        gameGrid = map.Grid;
     }
 
     public int[,] GetGameGrid() => gameGrid;
@@ -123,7 +68,6 @@ public class GameState
         for(var i = distances.Count-2; i >= 0; i--)
         {
             distances[i] = distances[i + 1] + Vector2.Distance(levelWaypoints[i + 1].position, levelWaypoints[i].position);
-            Debug.Log($"Waypoint Distance entry {i}: {distances[i]}");
         }
     }
 

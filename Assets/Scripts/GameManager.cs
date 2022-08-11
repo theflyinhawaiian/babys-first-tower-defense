@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject enemyPrefab;
     public GameObject waypointPrefab;
-    public Tilemap tileMap;
+    public Tilemap tilemap;
 
     private Transform[] enemyPathWaypoints;
 
