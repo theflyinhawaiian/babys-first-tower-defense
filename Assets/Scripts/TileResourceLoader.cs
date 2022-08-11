@@ -11,7 +11,7 @@ namespace Assets.Scripts
         private const string crossLane = "cross_lane";
         private const string LUCorner = "lu_lane";
         private const string LDCorner = "ld_lane";
-        private const string RUCorner = "ru_lane";
+        private const string RUCorner = "ur_lane";
         private const string RDCorner = "rd_lane";
         private const string Invalid = "invalid";
 
@@ -25,6 +25,7 @@ namespace Assets.Scripts
         public static Tile GetRDCorner() => GetTileByName(RDCorner);
         public static Tile GetInvalid() => GetTileByName(Invalid);
 
-        private static Tile GetTileByName(string name) => Resources.Load(name, typeof(Tile)) as Tile;
+        private static Tile GetTileByName(string name) => Resources.Load($"Tiles/{name}", typeof(Tile)) as Tile;
+
     }
 }
