@@ -1,3 +1,4 @@
+using Assets.Scripts;
 using Assets.Scripts.Data;
 using Assets.Scripts.Util;
 using System.Collections.Generic;
@@ -5,9 +6,6 @@ using UnityEngine;
 
 public class GameState
 {
-    public static int height = 31;
-    public static int width = 53;
-
     public Point[] waypoints;
 
     public List<Transform> LevelWaypoints { get; private set; }
@@ -32,22 +30,7 @@ public class GameState
 
     public GameState()
     {
-        //var map = FileHandler.ReadFromJSON<GameMap>("foomap");
-        var grid = new int[width, height];
-
-        for(var i = 0; i < height; i++) {
-            for(var j = 0; j < width; j++) {
-                grid[j, i] = 1;
-            }
-        }
-
-        grid[0, 3] = 3;
-        grid[43, 28] = 4;
-
-        var map = new GameMap
-        {
-            Grid = grid
-        };
+        var map = FileHandler.ReadFromJSON<GameMap>("foomap");
         InitializeState(map);
     }
 
@@ -58,7 +41,7 @@ public class GameState
 
     private void InitializeState(GameMap map)
     {
-        /*waypoints = new Point[]
+        waypoints = new Point[]
             {
                 new Point(0, 3),
                 new Point(2, 3),
@@ -68,13 +51,7 @@ public class GameState
                 new Point(40, 3),
                 new Point(40, 28),
                 new Point(43, 28)
-            };*/
-
-        waypoints = new Point[]
-        {
-            new Point(0,3),
-            new Point(43,28)
-        };
+            };
 
         gameGrid = map.Grid;
     }
@@ -114,15 +91,15 @@ public class GameState
 
     private bool IsOccupiedInternal(int gridX, int gridY)
     {
-        if (gridX < 0 || gridX >= width || gridY < 0 || gridY >= height)
+        if (gridX < 0 || gridX >= GameConstants.Width || gridY < 0 || gridY >= GameConstants.Height)
             return true;
 
         return gameGrid[gridX, gridY] != 0;
     }
 
-    public static Vector3 GridToWorldPoint(Vector2 gridPoint) => new Vector3(gridPoint.x - 1 - (width / 2) + 0.5f, gridPoint.y - 1 - (height / 2) + 0.5f, 0);
+    public static Vector3 GridToWorldPoint(Vector2 gridPoint) => new Vector3(gridPoint.x - 1 - (GameConstants.Width / 2) + 0.5f, gridPoint.y - 1 - (GameConstants.Height / 2) + 0.5f, 0);
 
-    private static int GetGridX(int xPos) => xPos + (width / 2) + 1;
+    private static int GetGridX(int xPos) => xPos + (GameConstants.Width / 2) + 1;
 
-    private static int GetGridY(int yPos) => yPos + (height / 2) + 1;
+    private static int GetGridY(int yPos) => yPos + (GameConstants.Height / 2) + 1;
 }
