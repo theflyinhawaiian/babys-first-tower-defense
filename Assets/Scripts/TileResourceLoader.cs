@@ -5,14 +5,18 @@ namespace Assets.Scripts
 {
     public static class TileResourceLoader
     {
-        private const string horizontal = "horizontal_lane";
-        private const string vertical = "vertical_lane";
-        private const string blankSpace = "blank_space";
-        private const string crossLane = "cross_lane";
-        private const string LUCorner = "lu_lane";
-        private const string LDCorner = "ld_lane";
-        private const string RUCorner = "ur_lane";
-        private const string RDCorner = "rd_lane";
+        private const string horizontal = "0110";
+        private const string vertical = "1001";
+        private const string blankSpace = "0000";
+        private const string crossLane = "1111";
+        private const string LUCorner = "1100";
+        private const string LDCorner = "0101";
+        private const string RUCorner = "1010";
+        private const string RDCorner = "0011";
+        private const string LRDTile = "0111";
+        private const string LUDTile = "1101";
+        private const string URDTile = "1011";
+        private const string LURTile = "1110";
         private const string Invalid = "invalid";
 
         public static Tile GetBlankSpace() => GetTileByName(blankSpace);
@@ -23,6 +27,10 @@ namespace Assets.Scripts
         public static Tile GetLDCorner() => GetTileByName(LDCorner);
         public static Tile GetRUCorner() => GetTileByName(RUCorner);
         public static Tile GetRDCorner() => GetTileByName(RDCorner);
+        public static Tile GetLRDTile() => GetTileByName(LRDTile);
+        public static Tile GetLUDTile() => GetTileByName(LUDTile);
+        public static Tile GetURDTile() => GetTileByName(URDTile);
+        public static Tile GetLURTile() => GetTileByName(LURTile);
         public static Tile GetInvalid() => GetTileByName(Invalid);
 
         private static Tile GetTileByName(string name) => Resources.Load($"Tiles/{name}", typeof(Tile)) as Tile;

@@ -32,7 +32,22 @@ public class GameState
 
     public GameState()
     {
-        var map = FileHandler.ReadFromJSON<GameMap>("foomap");
+        //var map = FileHandler.ReadFromJSON<GameMap>("foomap");
+        var grid = new int[width, height];
+
+        for(var i = 0; i < height; i++) {
+            for(var j = 0; j < width; j++) {
+                grid[j, i] = 1;
+            }
+        }
+
+        grid[0, 3] = 3;
+        grid[43, 28] = 4;
+
+        var map = new GameMap
+        {
+            Grid = grid
+        };
         InitializeState(map);
     }
 
@@ -43,7 +58,7 @@ public class GameState
 
     private void InitializeState(GameMap map)
     {
-        waypoints = new Point[]
+        /*waypoints = new Point[]
             {
                 new Point(0, 3),
                 new Point(2, 3),
@@ -53,7 +68,13 @@ public class GameState
                 new Point(40, 3),
                 new Point(40, 28),
                 new Point(43, 28)
-            };
+            };*/
+
+        waypoints = new Point[]
+        {
+            new Point(0,3),
+            new Point(43,28)
+        };
 
         gameGrid = map.Grid;
     }

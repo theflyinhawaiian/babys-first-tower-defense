@@ -24,10 +24,10 @@ namespace Assets.Scripts
             if (x >= width || y >= height || gameGrid[x,y] == 0)
                 return TileResourceLoader.GetBlankSpace();
 
-            var config = y == 0 ? "0" : gameGrid[x, y+1].ToString();
-            config += x == 0 ? "0" : gameGrid[x-1, y].ToString();
-            config += x == width - 1 ? "0" : gameGrid[x+1, y].ToString();
-            config += y == height - 1 ? "0" : gameGrid[x, y - 1].ToString();
+            var config = y != height - 1 && gameGrid[x, y+1] != 0 ? "1" : "0";
+            config += x != 0 && gameGrid[x-1, y] != 0 ? "1" : "0";
+            config += x != width - 1 && gameGrid[x+1, y] != 0 ? "1" : "0";
+            config += y != 0 && gameGrid[x, y - 1] != 0 ? "1" : "0";
 
             Tile res;
 
@@ -57,11 +57,26 @@ namespace Assets.Scripts
                 case "1100":
                     res = TileResourceLoader.GetLUCorner();
                     break;
-                // 0111 7: left, right, and down. LRD, Invalid for now
-                // 1011 11: up, right, down. URD, invalid for now
-                // 1101 13: up, left, and down. ULD, invalid for now
-                // 1110 14: up, left, and right. ULR, invalid for now.
-                // 1111 15: cross. invalid for now.
+                // 0111 7: left, right, and down. LRDTile
+                case "0111":
+                    res = TileResourceLoader.GetLRDTile();
+                    break;
+                // 1011 11: up, right, down. URDTile
+                case "1011":
+                    res = TileResourceLoader.GetURDTile();
+                    break;
+                // 1101 13: up, left, and down. LUDTile
+                case "1101":
+                    res = TileResourceLoader.GetLUDTile();
+                    break;
+                // 1110 14: up, left, and right. LURTile
+                case "1110":
+                    res = TileResourceLoader.GetLURTile();
+                    break;
+                // 1111 15: cross.
+                case "1111":
+                    res = TileResourceLoader.GetCrossLane();
+                    break;
                 default:
                     res = TileResourceLoader.GetInvalid();
                     break;
