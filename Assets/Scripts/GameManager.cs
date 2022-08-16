@@ -48,8 +48,8 @@ public class GameManager : MonoBehaviour
 
         gameState.SetLevelWaypoints(enemyPathWaypoints.ToList());
 
-        var mapRenderer = new MapRenderer();
-        mapRenderer.RenderMap(tilemap, gameState.GetGameGrid());
+        var mapRenderer = new MapRenderer(tilemap);
+        mapRenderer.RenderMap(gameState.GetGameGrid());
     }
 
     private void Update() {

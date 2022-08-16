@@ -3,15 +3,22 @@ using UnityEngine.Tilemaps;
 
 namespace Assets.Scripts
 {
+    public enum MapColor
+    {
+        Yellow, Orange, Green, Blue
+    }
+
     class MapRenderer
     {
-        public void RenderMap(Tilemap map, int[,] gameGrid)
+        Tilemap Map;
+
+        public MapRenderer(Tilemap map) => Map = map;
+
+        public void RenderMap(int[,] gameGrid)
         {
-            for(var i = 0; i < gameGrid.GetLength(0); i++)
-            {
-                for(var j = 0; j < gameGrid.GetLength(1); j++)
-                {
-                    map.SetTile(new Vector3Int(i, j, 0), GetTileForPosition(gameGrid, i, j));
+            for (var i = 0; i < gameGrid.GetLength(0); i++) {
+                for (var j = 0; j < gameGrid.GetLength(1); j++) {
+                    Map.SetTile(new Vector3Int(i, j, 0), GetTileForPosition(gameGrid, i, j));
                 }
             }
         }
@@ -21,18 +28,17 @@ namespace Assets.Scripts
             var width = gameGrid.GetLength(0);
             var height = gameGrid.GetLength(1);
 
-            if (x >= width || y >= height || gameGrid[x,y] == 0)
+            if (x >= width || y >= height || gameGrid[x, y] == 0)
                 return TileResourceLoader.GetBlankSpace();
 
-            var config = y != height - 1 && gameGrid[x, y+1] != 0 ? "1" : "0";
-            config += x != 0 && gameGrid[x-1, y] != 0 ? "1" : "0";
-            config += x != width - 1 && gameGrid[x+1, y] != 0 ? "1" : "0";
+            var config = y != height - 1 && gameGrid[x, y + 1] != 0 ? "1" : "0";
+            config += x != 0 && gameGrid[x - 1, y] != 0 ? "1" : "0";
+            config += x != width - 1 && gameGrid[x + 1, y] != 0 ? "1" : "0";
             config += y != 0 && gameGrid[x, y - 1] != 0 ? "1" : "0";
 
             Tile res;
 
-            switch (config)
-            {
+            switch (config) {
                 // 0011 3: right and down. RDCorner.
                 case "0011":
                     res = TileResourceLoader.GetRDCorner();
@@ -83,6 +89,31 @@ namespace Assets.Scripts
             }
 
             return res;
+        }
+
+        public void ColorTile(int gridX, int gridY, MapColor color)
+        {
+            Tile tile;
+
+            switch (color) {
+                case MapColor.Blue:
+                    tile = TileResourceLoader.GetBlue();
+                    break;
+                case MapColor.Green:
+                    tile = TileResourceLoader.GetGreen();
+                    break;
+                case MapColor.Yellow:
+                    tile = TileResourceLoader.GetYellow();
+                    break;
+                case MapColor.Orange:
+                    tile = TileResourceLoader.GetOrange();
+                    break;
+                default:
+                    tile = TileResourceLoader.GetInvalid();
+                    break;
+            }
+
+            Map.SetTile(new Vector3Int(gridX, gridY, 0), tile);
         }
     }
 }

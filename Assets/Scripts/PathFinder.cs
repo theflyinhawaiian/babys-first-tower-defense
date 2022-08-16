@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -19,6 +20,44 @@ namespace Assets.Scripts
             OriginY = startY;
             TerminalX = endX;
             TerminalY = endY;
+        }
+
+        public async void IllustratePath(MapRenderer renderer)
+        {
+            var open = new List<Node>();
+            var closed = new List<Node>();
+
+            open.Add(new Node(OriginX, OriginY, 0));
+            Node current = null;
+
+            while (open.Count > 0) {
+                current = open[0];
+
+                var neighbors = GetNeighbors(current);
+
+                foreach (var neighbor in neighbors) {
+                    if (closed.Contains(neighbor))
+                        continue;
+
+
+                    if (open.Contains(neighbor)) {
+                        var openNeighbor = open.FirstOrDefault(x => x == neighbor);
+                        if (openNeighbor == null)
+                            continue;
+                        if (openNeighbor.leastCostFromStart > neighbor.leastCostFromStart)
+                            openNeighbor.leastCostFromStart = neighbor.leastCostFromStart;
+                    } else {
+                        open.Add(neighbor);
+                        renderer.ColorTile(neighbor.xPos, neighbor.yPos, MapColor.Green);
+                    }
+                }
+
+                open.Remove(current);
+                closed.Add(current);
+                renderer.ColorTile(current.xPos, current.yPos, MapColor.Orange);
+
+                await Task.Delay(10);
+            }
         }
 
         public bool HasValidPath()

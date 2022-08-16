@@ -8,7 +8,14 @@ namespace Assets.Scripts
         public Camera mainCamera;
         public GameObject indicatorSquare;
 
+        LevelEditorManager manager;
+
         int lastX, lastY;
+
+        private void Start()
+        {
+            manager = GetComponent<LevelEditorManager>();
+        }
 
         private void Update()
         {
@@ -26,10 +33,12 @@ namespace Assets.Scripts
                 lastY = placementY;
             }
 
-            if (!Input.GetButtonDown("Fire1"))
+            if (!Input.GetButton("Fire1") || !IsInbounds(placementX, placementY))
                 return;
 
-            // Modify map state and re-render here
+            manager.SetGridValue(placementX, placementY);
         }
+
+        private bool IsInbounds(int x, int y) => x >= 0 && x < GameConstants.Width && y >= 0 && y < GameConstants.Height;
     }
 }
