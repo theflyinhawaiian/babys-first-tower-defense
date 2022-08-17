@@ -8,18 +8,15 @@ namespace Assets.Scripts
     class PathFinder
     {
         int[,] Grid;
-        int OriginX;
-        int OriginY;
-        int TerminalX;
-        int TerminalY;
+
+        Vector2Int startPos, endPos;
 
         public PathFinder(int[,] grid, int startX, int startY, int endX, int endY)
         {
             Grid = grid;
-            OriginX = startX;
-            OriginY = startY;
-            TerminalX = endX;
-            TerminalY = endY;
+
+            startPos = new Vector2Int(startX, startY);
+            endPos = new Vector2Int(endX, endY);
         }
 
         public async void IllustratePath(MapRenderer renderer)
@@ -27,11 +24,14 @@ namespace Assets.Scripts
             var open = new List<Node>();
             var closed = new List<Node>();
 
-            open.Add(new Node(OriginX, OriginY, 0));
+            open.Add(new Node(startPos.x, startPos.y, 0, Vector2Int.Distance(startPos, endPos)));
             Node current = null;
 
             while (open.Count > 0) {
-                current = open[0];
+                current = open.OrderBy(x => x.totalCost).First();
+
+                if (current.distanceFromGoal == 1)
+                    return;
 
                 var neighbors = GetNeighbors(current);
 
@@ -44,8 +44,8 @@ namespace Assets.Scripts
                         var openNeighbor = open.FirstOrDefault(x => x == neighbor);
                         if (openNeighbor == null)
                             continue;
-                        if (openNeighbor.leastCostFromStart > neighbor.leastCostFromStart)
-                            openNeighbor.leastCostFromStart = neighbor.leastCostFromStart;
+                        if (openNeighbor.costFromStart > neighbor.costFromStart)
+                            openNeighbor.costFromStart = neighbor.costFromStart;
                     } else {
                         open.Add(neighbor);
                         renderer.ColorTile(neighbor.xPos, neighbor.yPos, MapColor.Green);
@@ -65,7 +65,7 @@ namespace Assets.Scripts
             var open = new List<Node>();
             var closed = new List<Node>();
 
-            open.Add(new Node(OriginX, OriginY, 0));
+            open.Add(new Node(startPos.x, startPos.y, 0, Vector2Int.Distance(startPos, endPos)));
             Node current = null;
 
             while(open.Count > 0) {
@@ -79,8 +79,8 @@ namespace Assets.Scripts
 
                     if (open.Contains(neighbor)) {
                         var x = open.First(x => x == neighbor);
-                        if (x.leastCostFromStart > neighbor.leastCostFromStart)
-                            x.leastCostFromStart = neighbor.leastCostFromStart;
+                        if (x.costFromStart > neighbor.costFromStart)
+                            x.costFromStart = neighbor.costFromStart;
                     }else {
                         open.Add(neighbor);
                     }
@@ -90,7 +90,7 @@ namespace Assets.Scripts
                 closed.Add(current);
             }
 
-            var hasValidPath = current != null && current.GetFitness(TerminalX, TerminalY) == current.leastCostFromStart + 1;
+            var hasValidPath = current != null && current.totalCost == current.costFromStart + 1;
             return hasValidPath;
         }
 
@@ -99,19 +99,19 @@ namespace Assets.Scripts
             var nodes = new List<Node>();
 
             if (curr.xPos > 0 && Grid[curr.xPos - 1, curr.yPos] == 1) {
-                nodes.Add(new Node(curr.xPos - 1, curr.yPos, curr.leastCostFromStart + 1));
+                nodes.Add(new Node(curr.xPos - 1, curr.yPos, curr.costFromStart + 1, Vector2Int.Distance(new Vector2Int(curr.xPos - 1, curr.yPos), endPos)));
             }
 
             if (curr.xPos < Grid.GetLength(0) - 1 && Grid[curr.xPos + 1, curr.yPos] == 1) {
-                nodes.Add(new Node(curr.xPos + 1, curr.yPos, curr.leastCostFromStart + 1));
+                nodes.Add(new Node(curr.xPos + 1, curr.yPos, curr.costFromStart + 1, Vector2Int.Distance(new Vector2Int(curr.xPos + 1, curr.yPos), endPos)));
             }
 
             if (curr.yPos > 0 && Grid[curr.xPos, curr.yPos - 1] == 1) {
-                nodes.Add(new Node(curr.xPos, curr.yPos - 1, curr.leastCostFromStart + 1));
+                nodes.Add(new Node(curr.xPos, curr.yPos - 1, curr.costFromStart + 1, Vector2Int.Distance(new Vector2Int(curr.xPos, curr.yPos - 1), endPos)));
             }
 
             if (curr.yPos < Grid.GetLength(1) - 1 && Grid[curr.xPos, curr.yPos + 1] == 1) {
-                nodes.Add(new Node(curr.xPos, curr.yPos + 1, curr.leastCostFromStart + 1));
+                nodes.Add(new Node(curr.xPos, curr.yPos + 1, curr.costFromStart + 1, Vector2Int.Distance(new Vector2Int(curr.xPos, curr.yPos + 1), endPos)));
             }
 
             return nodes;
@@ -121,16 +121,17 @@ namespace Assets.Scripts
         {
             public int xPos;
             public int yPos;
-            public float leastCostFromStart;
+            public float costFromStart;
+            public float distanceFromGoal;
 
-            public Node(int x, int y, float cost)
+            public float totalCost => costFromStart + distanceFromGoal;
+
+            public Node(int x, int y, float cost, float distFromGoal)
             {
                 xPos = x;
                 yPos = y;
-                leastCostFromStart = cost;
+                costFromStart = cost;
             }
-
-            public float GetFitness(int goalX, int goalY) => leastCostFromStart + Vector2.Distance(new Vector2(xPos, yPos), new Vector2(goalX, goalY));
 
             public override bool Equals(object obj)
             {

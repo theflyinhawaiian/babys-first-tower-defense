@@ -1,3 +1,6 @@
+using Assets.Scripts.Data;
+using Assets.Scripts.Util;
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -24,7 +27,7 @@ namespace Assets.Scripts
 
             for (var i = 0; i < GameConstants.Height; i++) {
                 for(var j = 0; j < GameConstants.Width; j++) {
-                    Grid[j, i] = 0;
+                    Grid[j, i] = 1;
                 }
             }
 
@@ -98,6 +101,17 @@ namespace Assets.Scripts
         public void SetModeStart() => currentMode = EditMode.Start;
 
         public void SetModeFinish() => currentMode = EditMode.Finish;
+
+        public void SaveMap()
+        {
+            var map = new GameMap
+            {
+                Grid = Grid,
+                Height = GameConstants.Height,
+                Width = GameConstants.Width
+            };
+            FileHandler.SaveToJSON(map, $"map-{DateTime.Now.ToString("dd-mm-yy")}");
+        }
 
         private enum EditMode
         {

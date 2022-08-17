@@ -30,7 +30,7 @@ public class GameState
 
     public GameState()
     {
-        var map = FileHandler.ReadFromJSON<GameMap>("foomap");
+        var map = FileHandler.ReadFromJSON<GameMap>("map-16-35-22");
         InitializeState(map);
     }
 
