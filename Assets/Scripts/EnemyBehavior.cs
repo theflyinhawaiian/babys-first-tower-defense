@@ -29,8 +29,10 @@ public class EnemyBehavior : MonoBehaviour, IDamageable
             return;
         }
         
-        if (targetIndex >= waypoints.Length)
+        if (targetIndex >= waypoints.Length) {
+            Destroy(gameObject);
             return;
+        }
 
         if ((Vector2)transform.position == (Vector2)waypoints[targetIndex].position)
             targetIndex++;
