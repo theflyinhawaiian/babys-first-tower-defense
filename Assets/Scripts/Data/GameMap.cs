@@ -46,27 +46,25 @@ namespace Assets.Scripts.Data
 
         public bool Validate()
         {
-            var startX = -1;
-            var startY = -1;
-            var endX = -1;
-            var endY = -1;
+            var start = new Vector2Int(-1, -1);
+            var end = new Vector2Int(-1, -1);
 
             for (var i = 0; i < Grid.GetLength(0); i++) {
                 for (var j = 0; j < Grid.GetLength(1); j++) {
                     if(Grid[i,j] == 3) {
-                        startX = i;
-                        startY = j;
+                        start.x = i;
+                        start.y = j;
                     }else if(Grid[i,j] == 4) {
-                        endX = i;
-                        endY = j;
+                        end.x = i;
+                        end.y = j;
                     }
                 }
             }
 
-            if (startX == -1 || startY == -1 || endX == -1 || endY == -1)
+            if (start.x == -1 || start.y == -1 || end.x == -1 || end.y == -1)
                 return false;
 
-            var pathFinder = new PathFinder(Grid, startX, startY, endX, endY);
+            var pathFinder = new PathFinder(Grid, start, end);
 
             return pathFinder.HasValidPath();
         }

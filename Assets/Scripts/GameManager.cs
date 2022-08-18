@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     {
         gameState = GameState.Instance;
 
-        var waypoints = gameState.waypoints;
+        var waypoints = gameState.GetWaypoints();
 
         MoneyManager = new MoneyManager(500);
 

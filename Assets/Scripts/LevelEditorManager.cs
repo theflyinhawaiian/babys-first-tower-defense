@@ -1,6 +1,7 @@
 using Assets.Scripts.Data;
 using Assets.Scripts.Util;
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -27,7 +28,7 @@ namespace Assets.Scripts
 
             for (var i = 0; i < GameConstants.Height; i++) {
                 for(var j = 0; j < GameConstants.Width; j++) {
-                    Grid[j, i] = 1;
+                    Grid[j, i] = 0;
                 }
             }
 
@@ -90,8 +91,11 @@ namespace Assets.Scripts
                 return;
             }
 
-            var pathfinder = new PathFinder(Grid, start.x, start.y, end.x, end.y);
-            pathfinder.IllustratePath(renderer);
+            var pathfinder = new PathFinder(Grid, start, end)
+            {
+                renderer = renderer
+            };
+            Task.Run(async () => await pathfinder.IllustrateAStar());
         }
 
         public void SetModeClear() => currentMode = EditMode.Clear;

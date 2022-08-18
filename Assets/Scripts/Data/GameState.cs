@@ -2,16 +2,19 @@ using Assets.Scripts;
 using Assets.Scripts.Data;
 using Assets.Scripts.Util;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameState
 {
-    public Point[] waypoints;
+    private Point[] waypoints;
 
     public List<Transform> LevelWaypoints { get; private set; }
     public List<float> distances { get; private set; }
 
     private int[,] gameGrid;
+
+    private Vector2Int Start, End;
 
     private static GameState _instance;
     public static GameState Instance { 
@@ -30,7 +33,7 @@ public class GameState
 
     public GameState()
     {
-        var map = FileHandler.ReadFromJSON<GameMap>("map-16-35-22");
+        var map = FileHandler.ReadFromJSON<GameMap>("map1");
         InitializeState(map);
     }
 
@@ -41,22 +44,29 @@ public class GameState
 
     private void InitializeState(GameMap map)
     {
-        waypoints = new Point[]
-            {
-                new Point(0, 3),
-                new Point(2, 3),
-                new Point(2, 28),
-                new Point(20, 28),
-                new Point(20, 3),
-                new Point(40, 3),
-                new Point(40, 28),
-                new Point(43, 28)
-            };
-
         gameGrid = map.Grid;
+
+        for(var i = 0; i < gameGrid.GetLength(0); i++) {
+            for(var j = 0; j < gameGrid.GetLength(1); j++) {
+                if (gameGrid[i,j] == 3)
+                    Start = new Vector2Int(i,j);
+                if (gameGrid[i,j] == 4)
+                    End = new Vector2Int(i,j);
+            }
+        }
     }
 
     public int[,] GetGameGrid() => gameGrid;
+
+    public Point[] GetWaypoints()
+    {
+        if (waypoints != null && waypoints.Length > 0)
+            return waypoints;
+
+        var pathFinder = new PathFinder(gameGrid, Start, End);
+        waypoints = pathFinder.FindPath().ToArray();
+        return waypoints;
+    }
 
     public void SetLevelWaypoints(List<Transform> levelWaypoints)
     {
