@@ -28,14 +28,14 @@ public class EnemyBehavior : MonoBehaviour, IDamageable
             Destroy(gameObject);
             return;
         }
-        
+
+        if ((Vector2)transform.position == (Vector2)waypoints[targetIndex].position)
+            targetIndex++;
+
         if (targetIndex >= waypoints.Length) {
             Destroy(gameObject);
             return;
         }
-
-        if ((Vector2)transform.position == (Vector2)waypoints[targetIndex].position)
-            targetIndex++;
 
         transform.position = Vector2.MoveTowards(transform.position, waypoints[targetIndex].position, Time.deltaTime * moveSpeed);
     }

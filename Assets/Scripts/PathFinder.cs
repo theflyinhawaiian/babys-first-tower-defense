@@ -151,6 +151,8 @@ namespace Assets.Scripts
                 idx++;
             }
 
+            compressedPath.Add(path.Last());
+
             return compressedPath;
         }
 
