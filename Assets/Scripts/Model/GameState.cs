@@ -33,7 +33,8 @@ public class GameState
 
     public GameState()
     {
-        var map = FileHandler.ReadFromJSON<GameMap>("map1");
+        var fileHandler = new LevelFileHandler();
+        var map = fileHandler.LoadLevel("map1");
         InitializeState(map);
     }
 

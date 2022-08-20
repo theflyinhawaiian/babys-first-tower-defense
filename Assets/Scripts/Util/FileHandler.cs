@@ -8,22 +8,22 @@ namespace Assets.Scripts.Util
 {
     public static class FileHandler
     {
-        public static void SaveToJSON<T>(List<T> toSave, string filename)
+        public static void SaveToJSON<T>(List<T> toSave, string relPath)
         {
             var content = JsonHelper.ToJson(toSave.ToArray());
-            WriteFile(GetPath(filename), content);
+            WriteFile(GetPath(relPath), content);
         }
 
-        public static void SaveToJSON<T>(T toSave, string filename)
+        public static void SaveToJSON<T>(T toSave, string relPath)
         {
             var content = JsonUtility.ToJson(toSave, true);
             Debug.Log(content);
-            WriteFile(GetPath(filename), content);
+            WriteFile(GetPath(relPath), content);
         }
 
-        public static List<T> ReadListFromJSON<T>(string filename)
+        public static List<T> ReadListFromJSON<T>(string relPath)
         {
-            var content = ReadFile(GetPath(filename));
+            var content = ReadFile(GetPath(relPath));
 
             if (string.IsNullOrEmpty(content) || content == "{}")
                 return new List<T>();
@@ -34,9 +34,9 @@ namespace Assets.Scripts.Util
 
         }
 
-        public static T ReadFromJSON<T>(string filename)
+        public static T ReadFromJSON<T>(string relPath)
         {
-            var content = ReadFile(GetPath(filename));
+            var content = ReadFile(GetPath(relPath));
 
             if (string.IsNullOrEmpty(content) || content == "{}")
                 return default;
@@ -45,7 +45,11 @@ namespace Assets.Scripts.Util
 
         }
 
-        private static string GetPath(string filename) => Application.persistentDataPath + "/" + filename;
+        public static void CreateDir(string relativePath) => Directory.CreateDirectory(GetPath(relativePath));
+
+        public static string[] GetFiles(string directoryName) => Directory.GetFiles(GetPath(directoryName));
+
+        private static string GetPath(string relativePath) => Path.Combine(Application.persistentDataPath, relativePath);
 
         private static void WriteFile(string path, string content)
         {

@@ -13,6 +13,8 @@ namespace Assets.Scripts
 
         MapRenderer renderer;
 
+        LevelFileHandler fileHandler;
+
         EditMode currentMode;
 
         private int[,] Grid;
@@ -34,6 +36,8 @@ namespace Assets.Scripts
 
             renderer = new MapRenderer(Tilemap);
             renderer.RenderMap(Grid);
+
+            fileHandler = new LevelFileHandler();
         }
 
         public void SetGridValue(int x, int y)
@@ -114,7 +118,7 @@ namespace Assets.Scripts
                 Height = GameConstants.Height,
                 Width = GameConstants.Width
             };
-            FileHandler.SaveToJSON(map, $"map-{DateTime.Now.ToString("dd-mm-yy")}");
+            fileHandler.SaveLevel(map);
         }
 
         private enum EditMode
