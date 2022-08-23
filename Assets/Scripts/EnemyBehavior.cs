@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class EnemyBehavior : MonoBehaviour, IDamageable
@@ -14,9 +15,14 @@ public class EnemyBehavior : MonoBehaviour, IDamageable
     private int currentHealth;
     private int targetIndex = 1;
 
+    private Transform Healthbar;
+    private Transform LifeRemaining;
+
     private void Start()
     {
         currentHealth = maxHealth;
+        Healthbar = transform.Find("HealthBar");
+        LifeRemaining = Healthbar.Find("Bar");
     }
 
     private void Update()
@@ -42,7 +48,12 @@ public class EnemyBehavior : MonoBehaviour, IDamageable
 
     public void ApplyDamage(int damageAmount)
     {
+        if (!Healthbar.gameObject.activeInHierarchy)
+            Healthbar.gameObject.SetActive(true);
+
         currentHealth -= damageAmount;
+
+        LifeRemaining.localScale = new Vector3(((float)currentHealth) / maxHealth, LifeRemaining.localScale.y, LifeRemaining.localScale.z);
     }
 
 }
