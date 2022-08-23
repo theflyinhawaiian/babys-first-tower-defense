@@ -20,21 +20,21 @@ public class GameState
     public static GameState Instance { 
         get {
             if (_instance == null)
-                _instance = new GameState();
+                _instance = new GameState("map1");
 
             return _instance;
         }
 
-        private set
+        set
         {
             _instance = value;
         }
     }
 
-    public GameState()
+    public GameState(string mapName)
     {
         var fileHandler = new LevelFileHandler();
-        var map = fileHandler.LoadLevel("map1");
+        var map = fileHandler.LoadLevel(mapName);
         InitializeState(map);
     }
 

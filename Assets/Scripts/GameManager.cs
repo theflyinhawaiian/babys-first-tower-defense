@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     public GameObject waypointPrefab;
     public Tilemap tilemap;
 
+    public string mapName = "map1";
+
     private Transform[] enemyPathWaypoints;
 
     public int enemiesPerWave = 10;
@@ -33,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        GameState.Instance = new GameState(mapName);
         gameState = GameState.Instance;
 
         var waypoints = gameState.GetWaypoints();

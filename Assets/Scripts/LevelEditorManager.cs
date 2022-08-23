@@ -1,7 +1,4 @@
 using Assets.Scripts.Data;
-using Assets.Scripts.Util;
-using System;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,6 +7,8 @@ namespace Assets.Scripts
     public class LevelEditorManager : MonoBehaviour
     {
         public Tilemap Tilemap;
+
+        public string mapName;
 
         MapRenderer renderer;
 
@@ -23,14 +22,20 @@ namespace Assets.Scripts
 
         void Start()
         {
-            Grid = new int[GameConstants.Width, GameConstants.Height];
+            var handler = new LevelFileHandler();
+            Grid = handler.LoadLevel(mapName ?? "map1").Grid;
 
             start = new Vector2Int(-1, -1);
             end = new Vector2Int(-1, -1);
 
             for (var i = 0; i < GameConstants.Height; i++) {
                 for(var j = 0; j < GameConstants.Width; j++) {
-                    Grid[j, i] = 0;
+                    if (Grid[j, i] == 3) {
+                        start = new Vector2Int(j, i);
+                    }
+                    if (Grid[j, i] == 4) {
+                        end = new Vector2Int(j, i);
+                    }
                 }
             }
 
@@ -99,7 +104,7 @@ namespace Assets.Scripts
             {
                 renderer = renderer
             };
-            Task.Run(async () => await pathfinder.IllustrateAStar());
+            pathfinder.IllustrateAStar().ConfigureAwait(false);
         }
 
         public void SetModeClear() => currentMode = EditMode.Clear;

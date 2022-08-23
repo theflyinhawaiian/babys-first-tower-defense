@@ -34,7 +34,7 @@ namespace Assets.Scripts
                 current = open.OrderBy(x => x.totalCost).First();
 
                 if (current.distanceFromGoal == 1) {
-                    await IllustratePath(current, renderer);
+                    await IllustratePath(current);
                     return;
                 }
 
@@ -70,9 +70,9 @@ namespace Assets.Scripts
             }
         }
 
-        async Task IllustratePath(Node node, MapRenderer renderer)
+        async Task IllustratePath(Node node)
         {
-            var path = GetPath(node);
+            var path = GetPath(node, false);
 
             foreach(var coord in path) {
                 renderer.ColorTile(coord.X, coord.Y, MapColor.Blue);
@@ -121,7 +121,7 @@ namespace Assets.Scripts
             return new List<Point>();
         }
 
-        List<Point> GetPath(Node endpoint)
+        List<Point> GetPath(Node endpoint, bool compress = true)
         {
             var path = new List<Point>();
 
@@ -133,6 +133,9 @@ namespace Assets.Scripts
             }
 
             path.Reverse();
+
+            if (!compress)
+                return path;
 
             var compressedPath = new List<Point>();
             var diffVector = Vector2Int.zero;
