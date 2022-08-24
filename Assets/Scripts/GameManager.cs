@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject enemyPrefab;
     public GameObject waypointPrefab;
+    public GameObject towerPrefab;
     public Tilemap tilemap;
+    public ButtonBehavior placeTowerButton;
 
     public string mapName = "map1";
 
@@ -24,6 +27,8 @@ public class GameManager : MonoBehaviour
 
     float timeSinceLastSpawn = -1000;
     bool currentlySpawning = false;
+
+    public bool placeMode;
 
     private static GameState gameState;
 
@@ -60,6 +65,14 @@ public class GameManager : MonoBehaviour
             currentlySpawning = true;
             StartCoroutine(SpawnWave());
         }
+    }
+
+    public void ProcessClick(int x, int y)
+    {
+        if (!placeMode || !TryPlaceTowerAt(x, y))
+            return;
+
+        Instantiate(towerPrefab, new Vector3(x + 0.5f, y + 0.5f, 0), Quaternion.identity);
     }
 
     private IEnumerator SpawnWave()
@@ -100,6 +113,12 @@ public class GameManager : MonoBehaviour
         MoneyManager.TrySubtractBalance(TOWER_COST);
         gameState.TryPlaceTower(x, y);
         return true;
+    }
+
+    public void TogglePlaceMode()
+    {
+        placeMode = !placeMode;
+        placeTowerButton.SetSelected(placeMode);
     }
 
     public static float GetDistanceFromBase(EnemyBehavior enemy) =>

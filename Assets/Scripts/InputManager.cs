@@ -1,16 +1,19 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputManager : MonoBehaviour
 {
     public Camera mainCamera;
     public GameObject indicatorSquare;
-    public GameObject towerPrefab;
     public GameManager gameManager;
 
     int lastX, lastY;
+    int UILayer;
 
     private void Start()
     {
+        UILayer = LayerMask.NameToLayer("UI");
         gameManager = GetComponent<GameManager>();
     }
 
@@ -23,7 +26,7 @@ public class InputManager : MonoBehaviour
         var placementX = Mathf.FloorToInt(point.x);
         var placementY = Mathf.FloorToInt(point.y);
 
-        if(lastX != placementX || lastY != placementY)
+        if(gameManager.placeMode && (lastX != placementX || lastY != placementY))
         {
             indicatorSquare.transform.position = new Vector3(Mathf.FloorToInt(point.x) + 0.5f, Mathf.FloorToInt(point.y) + 0.5f, -1);
 
@@ -34,9 +37,24 @@ public class InputManager : MonoBehaviour
         if (!Input.GetButtonDown("Fire1"))
             return;
 
-        if (!gameManager.TryPlaceTowerAt(placementX, placementY))
+        if (IsPointerOverUIElement())
             return;
 
-        Instantiate(towerPrefab, new Vector3(placementX + 0.5f, placementY + 0.5f, 0), Quaternion.identity);
+        gameManager.ProcessClick(placementX, placementY);
+    }
+
+    private bool IsPointerOverUIElement()
+    {
+        var eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+        var raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, raycastResults);
+
+        for (int index = 0; index < raycastResults.Count; index++) {
+            var r = raycastResults[index];
+            if (r.gameObject.layer == UILayer)
+                return true;
+        }
+        return false;
     }
 }
