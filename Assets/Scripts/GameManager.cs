@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public GameObject towerPrefab;
     public Tilemap tilemap;
     public ButtonBehavior placeTowerButton;
+    public CameraController camController;
 
     public string mapName = "map1";
 

@@ -8,6 +8,7 @@ public class CameraController : MonoBehaviour
     public int scaleFactor = 64;
 
     Camera camera;
+    CamShakeBehavior shakeBehavior;
 
     Vector3 startPanPos, currPanPos, savedCamPos;
     bool panning = false;
@@ -16,6 +17,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         camera = GetComponent<Camera>();
+        shakeBehavior = GetComponent<CamShakeBehavior>();
         savedCamPos = transform.position;
     }
 
@@ -45,4 +47,9 @@ public class CameraController : MonoBehaviour
 
     void handleZoomChanged(int dy) =>
         camera.orthographicSize = Mathf.Clamp(camera.orthographicSize + dy, 10, 30);
+
+    public void Shake(float duration, float intensity)
+    {
+        shakeBehavior.Shake(duration, intensity);
+    }
 }
